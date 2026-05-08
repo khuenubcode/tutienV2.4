@@ -6,6 +6,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { PlayerState, GameHistoryItem, WeatherType, MapRegion, CombatUnit, CombatState, Skill, NPC, Difficulty, InventoryItem, Rarity, ChronicleEntry } from '../types';
 import { loadGame, saveGame, clearSave } from '../services/saveService';
+import { getChroniclesSummary } from '../lib/chronicleUtils';
 import { getCounterMultiplier, getReaction, ElementType } from '../data/element_system';
 import { REALMS } from '../data/worldData';
 import { INITIAL_NPCS } from '../data/npcData';
@@ -728,7 +729,9 @@ export function useGameState() {
         equipment: updatedEquipment,
         masteredTechniques: updatedTechniques,
         combatSkills: updatedCombatSkills,
-        chronicles: chronicles || prev.chronicles,
+        chronicles: getChroniclesSummary(
+          chronicleEntry ? [...(prev.chronicleEntries || []), chronicleEntry] : (prev.chronicleEntries || [])
+        ).recentEventsDescription,
         chronicleEntries: chronicleEntry ? [...(prev.chronicleEntries || []), chronicleEntry] : (prev.chronicleEntries || []),
         weather: weather || (prev.weather as any),
         mapData: mapData || prev.mapData,
